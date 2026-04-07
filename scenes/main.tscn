@@ -1,0 +1,49 @@
+[gd_scene load_steps=6 format=3 uid="uid://csb6eaxlcakym"]
+
+[ext_resource type="Script" path="res://scenes/main.gd" id="1_5qytu"]
+[ext_resource type="PackedScene" uid="uid://ihr0l22g1v07" path="res://scenes/board/GameBoard.tscn" id="1_rau4b"]
+[ext_resource type="SystemFont" uid="uid://ds0soky45743i" path="res://assets/mono.tres" id="3_0ng5p"]
+[ext_resource type="AudioStream" uid="uid://ilpo2iutpbvj" path="res://assets/Confirm.wav" id="3_4yvd3"]
+[ext_resource type="AudioStream" uid="uid://cgosm11popu8p" path="res://assets/Click.wav" id="4_6eix4"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_5qytu")
+
+[node name="GameBoard" parent="." instance=ExtResource("1_rau4b")]
+target = "0101"
+start = "0000"
+
+[node name="Target" type="RichTextLabel" parent="."]
+offset_right = 1152.0
+offset_bottom = 272.0
+theme_override_fonts/normal_font = ExtResource("3_0ng5p")
+theme_override_font_sizes/normal_font_size = 60
+bbcode_enabled = true
+text = "0000000"
+
+[node name="Board" type="RichTextLabel" parent="."]
+offset_left = -8.0
+offset_top = 272.0
+offset_right = 1144.0
+offset_bottom = 400.0
+theme_override_fonts/normal_font = ExtResource("3_0ng5p")
+theme_override_font_sizes/normal_font_size = 84
+bbcode_enabled = true
+text = "00000000"
+
+[node name="WinSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_4yvd3")
+
+[node name="MoveSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_6eix4")
+
+[node name="Label" type="Label" parent="."]
+offset_top = 568.0
+offset_right = 1152.0
+offset_bottom = 640.0
+theme_override_fonts/font = ExtResource("3_0ng5p")
+theme_override_font_sizes/font_size = 20
+text = "Press the right arrow key to start. 
+Your goal is to match the board to the target, bit by bit!"
+horizontal_alignment = 1
+vertical_alignment = 1
