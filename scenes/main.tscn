@@ -1,19 +1,21 @@
-[gd_scene load_steps=6 format=3 uid="uid://csb6eaxlcakym"]
+[gd_scene format=3 uid="uid://csb6eaxlcakym"]
 
-[ext_resource type="Script" path="res://scenes/main.gd" id="1_5qytu"]
+[ext_resource type="Script" uid="uid://crnrsi0ouyvjb" path="res://scenes/main.gd" id="1_5qytu"]
 [ext_resource type="PackedScene" uid="uid://ihr0l22g1v07" path="res://scenes/board/GameBoard.tscn" id="1_rau4b"]
 [ext_resource type="SystemFont" uid="uid://ds0soky45743i" path="res://assets/mono.tres" id="3_0ng5p"]
 [ext_resource type="AudioStream" uid="uid://ilpo2iutpbvj" path="res://assets/Confirm.wav" id="3_4yvd3"]
+[ext_resource type="Script" uid="uid://dt8txhjf8ufvu" path="res://scenes/board/game_board.gd" id="3_tefeu"]
 [ext_resource type="AudioStream" uid="uid://cgosm11popu8p" path="res://assets/Click.wav" id="4_6eix4"]
 
-[node name="Main" type="Node"]
+[node name="Main" type="Node" unique_id=212816075]
 script = ExtResource("1_5qytu")
+metadata/_edit_horizontal_guides_ = [80.0]
 
-[node name="GameBoard" parent="." instance=ExtResource("1_rau4b")]
-target = "0101"
-start = "0000"
+[node name="GameBoard" parent="." unique_id=499610796 instance=ExtResource("1_rau4b")]
+script = ExtResource("3_tefeu")
+target = "11110011"
 
-[node name="Target" type="RichTextLabel" parent="."]
+[node name="Target" type="RichTextLabel" parent="." unique_id=1582712405]
 offset_right = 1152.0
 offset_bottom = 272.0
 theme_override_fonts/normal_font = ExtResource("3_0ng5p")
@@ -21,7 +23,7 @@ theme_override_font_sizes/normal_font_size = 60
 bbcode_enabled = true
 text = "0000000"
 
-[node name="Board" type="RichTextLabel" parent="."]
+[node name="Board" type="RichTextLabel" parent="." unique_id=619643644]
 offset_left = -8.0
 offset_top = 272.0
 offset_right = 1144.0
@@ -31,13 +33,13 @@ theme_override_font_sizes/normal_font_size = 84
 bbcode_enabled = true
 text = "00000000"
 
-[node name="WinSound" type="AudioStreamPlayer" parent="."]
+[node name="WinSound" type="AudioStreamPlayer" parent="." unique_id=1289401778]
 stream = ExtResource("3_4yvd3")
 
-[node name="MoveSound" type="AudioStreamPlayer" parent="."]
+[node name="MoveSound" type="AudioStreamPlayer" parent="." unique_id=1591171252]
 stream = ExtResource("4_6eix4")
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=699833059]
 offset_top = 568.0
 offset_right = 1152.0
 offset_bottom = 640.0
