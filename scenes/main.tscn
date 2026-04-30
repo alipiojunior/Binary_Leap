@@ -1,19 +1,20 @@
 [gd_scene format=3 uid="uid://csb6eaxlcakym"]
 
 [ext_resource type="Script" uid="uid://crnrsi0ouyvjb" path="res://scenes/main.gd" id="1_5qytu"]
-[ext_resource type="PackedScene" uid="uid://ihr0l22g1v07" path="res://scenes/board/GameBoard.tscn" id="1_rau4b"]
+[ext_resource type="Script" uid="uid://dylilh6rq281g" path="res://scenes/board/GameBoard.gd" id="2_tbgi4"]
 [ext_resource type="SystemFont" uid="uid://ds0soky45743i" path="res://assets/mono.tres" id="3_0ng5p"]
 [ext_resource type="AudioStream" uid="uid://ilpo2iutpbvj" path="res://assets/Confirm.wav" id="3_4yvd3"]
-[ext_resource type="Script" uid="uid://dt8txhjf8ufvu" path="res://scenes/board/game_board.gd" id="3_tefeu"]
 [ext_resource type="AudioStream" uid="uid://cgosm11popu8p" path="res://assets/Click.wav" id="4_6eix4"]
 
 [node name="Main" type="Node" unique_id=212816075]
 script = ExtResource("1_5qytu")
 metadata/_edit_horizontal_guides_ = [80.0]
 
-[node name="GameBoard" parent="." unique_id=499610796 instance=ExtResource("1_rau4b")]
-script = ExtResource("3_tefeu")
-target = "11110011"
+[node name="GameBoard" type="Node" parent="." unique_id=747904054]
+script = ExtResource("2_tbgi4")
+board_definition = "11(1,2){1,1}0<1,1>0"
+target = "0000000"
+metadata/_custom_type_script = "uid://dylilh6rq281g"
 
 [node name="Target" type="RichTextLabel" parent="." unique_id=1582712405]
 offset_right = 1152.0
@@ -28,6 +29,16 @@ offset_left = -8.0
 offset_top = 272.0
 offset_right = 1144.0
 offset_bottom = 400.0
+theme_override_fonts/normal_font = ExtResource("3_0ng5p")
+theme_override_font_sizes/normal_font_size = 84
+bbcode_enabled = true
+text = "00000000"
+
+[node name="Info" type="RichTextLabel" parent="." unique_id=1999927955]
+offset_left = -8.0
+offset_top = 368.0
+offset_right = 1144.0
+offset_bottom = 496.0
 theme_override_fonts/normal_font = ExtResource("3_0ng5p")
 theme_override_font_sizes/normal_font_size = 84
 bbcode_enabled = true
