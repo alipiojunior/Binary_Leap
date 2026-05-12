@@ -24,17 +24,18 @@ var current_state: Array[bool] = []   # live bit values (aliased)
 var current_index: int = -1
 var current_display: String = ""
 
-# Per‑cell metadata
+# Per-cell metadata
 var cell_types: Array[int] = []       # CellType values
 var cell_params: Array[int] = []      # N for special cells, 0 for standard
-var cell_counters: Array[int] = []    # visit counter for flip‑every‑N, blocker, exploding
+var cell_counters: Array[int] = []    # visit counter for flip-every-N, blocker, exploding
 
-# Explosion chain guard – prevents infinite recursion
+# Explosion chain guard - prevents infinite recursion
 var _in_explosion_chain: Array[bool] = []
 
 
 func _ready() -> void:
 	reset_board()
+	InputManager.move_requested.connect(_on_move_requested)
 
 
 func reset_board() -> void:
@@ -42,17 +43,16 @@ func reset_board() -> void:
 	target_state = binstr_to_arr(target)
 	current_index = starting_index
 	current_display = arr_to_binstr(current_state)
-	# Optionally emit game_started() here if needed
 
 
-func _process(_delta: float) -> void:
+func _on_move_requested(direction: int) -> void:
 	var moved := false
 	var old_state := current_state.duplicate()
 	var old_index := current_index
 
-	if Input.is_action_just_pressed("move_left"):
+	if direction == -1:
 		moved = move_left()
-	elif Input.is_action_just_pressed("move_right"):
+	elif direction == +1:
 		moved = move_right()
 
 	if moved:
@@ -82,39 +82,29 @@ func move_left() -> bool:
 
 ## Common logic for a valid move onto a cell.
 func _attempt_move(new_index: int) -> bool:
-	# Blocker that has reached its limit → impassable (cursor cannot enter)
 	if cell_types[new_index] == CellType.BLOCKER and cell_counters[new_index] >= cell_params[new_index]:
 		return false
 
-	# Clear recursion guard for this move
 	for i in board_size:
 		_in_explosion_chain[i] = false
 
-	# Process the cell as if the cursor landed on it (full behaviour)
 	_apply_visit(new_index)
-
 	current_index = new_index
 	return true
 
 
-## Simulate a visit to a cell – increments its counter and applies all rules,
-## including possible chain explosions.
 func _apply_visit(index: int) -> void:
-	# Prevent re‑entering a cell that is already being processed in an explosion chain
 	if _in_explosion_chain[index]:
 		return
 
-	# Blocker that has already blocked is immune to explosions (and anything else)
 	if cell_types[index] == CellType.BLOCKER and cell_counters[index] >= cell_params[index]:
 		return
 
-	# One “visit” to this cell
 	cell_counters[index] += 1
 	var counter := cell_counters[index]
 
 	match cell_types[index]:
 		CellType.STANDARD, CellType.BLOCKER:
-			# Standard and blocker cells flip every time they are visited
 			current_state[index] = not current_state[index]
 
 		CellType.FLIP_EVERY_N:
@@ -123,27 +113,17 @@ func _apply_visit(index: int) -> void:
 				current_state[index] = not current_state[index]
 
 		CellType.EXPLODING:
-			# Always flips itself
 			current_state[index] = not current_state[index]
-
-			# If this is a multiple‑of‑N visit, also affect neighbours
 			var n := cell_params[index]
 			if n > 0 and counter % n == 0:
-				# Set flag to prevent infinite recursion
 				_in_explosion_chain[index] = true
-
-				var left_neighbour := index - 1
-				var right_neighbour := index + 1
-
-				if left_neighbour >= 0:
-					_apply_visit(left_neighbour)
-				if right_neighbour < board_size:
-					_apply_visit(right_neighbour)
-
+				if index - 1 >= 0:
+					_apply_visit(index - 1)
+				if index + 1 < board_size:
+					_apply_visit(index + 1)
 				_in_explosion_chain[index] = false
 
 
-## Check victory condition.
 func _check_solve() -> void:
 	if current_state == target_state:
 		solved.emit()
@@ -163,12 +143,10 @@ func _parse_board_definition(def: String) -> void:
 	while i < def.length():
 		var ch := def[i]
 
-		# Skip whitespace
 		if ch == ' ' or ch == '\t' or ch == '\n':
 			i += 1
 			continue
 
-		# Standard bit: '0' or '1'
 		if ch == '0' or ch == '1':
 			current_state.append(ch == '1')
 			cell_types.append(CellType.STANDARD)
@@ -176,7 +154,6 @@ func _parse_board_definition(def: String) -> void:
 			cell_counters.append(0)
 			i += 1
 
-		# Flip‑every‑N: '(' value ',' N ')'
 		elif ch == '(':
 			i += 1
 			var val := _parse_digit(def, i); i += 1
@@ -189,13 +166,11 @@ func _parse_board_definition(def: String) -> void:
 				push_error("Malformed (value,N): missing closing )")
 				return
 			i += 1
-
 			current_state.append(val == 1)
 			cell_types.append(CellType.FLIP_EVERY_N)
 			cell_params.append(n)
 			cell_counters.append(0)
 
-		# Blocker: '{' value ',' N '}'
 		elif ch == '{':
 			i += 1
 			var val := _parse_digit(def, i); i += 1
@@ -208,13 +183,11 @@ func _parse_board_definition(def: String) -> void:
 				push_error("Malformed {value,N}: missing closing }")
 				return
 			i += 1
-
 			current_state.append(val == 1)
 			cell_types.append(CellType.BLOCKER)
 			cell_params.append(n)
 			cell_counters.append(0)
 
-		# Exploding: '<' value ',' N '>'
 		elif ch == '<':
 			i += 1
 			var val := _parse_digit(def, i); i += 1
@@ -227,7 +200,6 @@ func _parse_board_definition(def: String) -> void:
 				push_error("Malformed <value,N>: missing closing >")
 				return
 			i += 1
-
 			current_state.append(val == 1)
 			cell_types.append(CellType.EXPLODING)
 			cell_params.append(n)
@@ -238,8 +210,6 @@ func _parse_board_definition(def: String) -> void:
 			i += 1
 
 	board_size = current_state.size()
-
-	# Prepare guard array for explosion chains
 	_in_explosion_chain.clear()
 	_in_explosion_chain.resize(board_size)
 	_in_explosion_chain.fill(false)
@@ -269,7 +239,7 @@ func _skip_digits(s: String, idx: int) -> int:
 
 
 # ------------------------------------------------------------------ #
-#  Utility converters (unchanged from original)                      #
+#  Utility converters                                                #
 # ------------------------------------------------------------------ #
 
 func binstr_to_arr(bin_str: String) -> Array[bool]:
