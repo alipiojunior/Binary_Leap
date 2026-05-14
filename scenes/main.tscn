@@ -5,6 +5,7 @@
 [ext_resource type="SystemFont" uid="uid://ds0soky45743i" path="res://assets/mono.tres" id="3_0ng5p"]
 [ext_resource type="AudioStream" uid="uid://ilpo2iutpbvj" path="res://assets/Confirm.wav" id="3_4yvd3"]
 [ext_resource type="AudioStream" uid="uid://cgosm11popu8p" path="res://assets/Click.wav" id="4_6eix4"]
+[ext_resource type="Script" uid="uid://b1pogk4np0yyt" path="res://scenes/board/board.gd" id="4_tefeu"]
 
 [node name="Main" type="Node" unique_id=212816075]
 script = ExtResource("1_5qytu")
@@ -12,7 +13,8 @@ metadata/_edit_horizontal_guides_ = [80.0]
 
 [node name="GameBoard" type="Node" parent="." unique_id=747904054]
 script = ExtResource("2_tbgi4")
-board_definition = "1<1,1><1,1><1,1>"
+board_definition = "11(1,2){1,1}0<1,1>0"
+target = "0000000"
 metadata/_custom_type_script = "uid://dylilh6rq281g"
 
 [node name="Target" type="RichTextLabel" parent="." unique_id=1582712405]
@@ -23,21 +25,22 @@ theme_override_font_sizes/normal_font_size = 60
 bbcode_enabled = true
 text = "0000000"
 
-[node name="Board" type="RichTextLabel" parent="." unique_id=619643644]
-offset_left = -8.0
-offset_top = 272.0
-offset_right = 1144.0
-offset_bottom = 400.0
-theme_override_fonts/normal_font = ExtResource("3_0ng5p")
-theme_override_font_sizes/normal_font_size = 84
-bbcode_enabled = true
-text = "00000000"
+[node name="Board" type="HBoxContainer" parent="." unique_id=384713983]
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+script = ExtResource("4_tefeu")
+metadata/_custom_type_script = "uid://b1pogk4np0yyt"
 
 [node name="Info" type="RichTextLabel" parent="." unique_id=1999927955]
-offset_left = -8.0
-offset_top = 368.0
-offset_right = 1144.0
-offset_bottom = 496.0
+offset_top = 240.0
+offset_right = 1152.0
+offset_bottom = 368.0
 theme_override_fonts/normal_font = ExtResource("3_0ng5p")
 theme_override_font_sizes/normal_font_size = 84
 bbcode_enabled = true
