@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://c7yfegrqjlvbf"]
+
+[ext_resource type="Script" uid="uid://dyjh8ijxgma7f" path="res://scenes/board/cell.gd" id="1_qhyba"]
+
+[node name="Cell" type="Control" unique_id=467858054]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qhyba")
+
+[node name="BitLabel" type="RichTextLabel" parent="." unique_id=2040953142]
+clip_contents = false
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_font_sizes/normal_font_size = 48
+theme_override_font_sizes/bold_font_size = 48
+theme_override_font_sizes/bold_italics_font_size = 48
+theme_override_font_sizes/italics_font_size = 48
+theme_override_font_sizes/mono_font_size = 48
+fit_content = true
