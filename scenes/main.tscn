@@ -7,8 +7,11 @@
 [ext_resource type="AudioStream" uid="uid://cgosm11popu8p" path="res://assets/Click.wav" id="4_6eix4"]
 [ext_resource type="Script" uid="uid://b1pogk4np0yyt" path="res://scenes/board/board.gd" id="4_tefeu"]
 
-[node name="Main" type="Node" unique_id=212816075]
+[node name="Main" type="Node" unique_id=212816075 node_paths=PackedStringArray("menu_layer", "btn_continuar", "btn_sair")]
 script = ExtResource("1_5qytu")
+menu_layer = NodePath("MenuLayer")
+btn_continuar = NodePath("MenuLayer/CenterContainer/VBoxContainer/BtnContinuar")
+btn_sair = NodePath("MenuLayer/CenterContainer/VBoxContainer/BtnSair")
 metadata/_edit_horizontal_guides_ = [80.0]
 
 [node name="GameBoard" type="Node" parent="." unique_id=747904054]
@@ -23,18 +26,6 @@ theme_override_fonts/normal_font = ExtResource("3_0ng5p")
 theme_override_font_sizes/normal_font_size = 60
 bbcode_enabled = true
 text = "0000000"
-
-[node name="Board" type="HBoxContainer" parent="." unique_id=384713983]
-anchors_preset = 14
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 6
-size_flags_vertical = 6
-script = ExtResource("4_tefeu")
-metadata/_custom_type_script = "uid://b1pogk4np0yyt"
 
 [node name="Info" type="RichTextLabel" parent="." unique_id=1999927955]
 offset_top = 240.0
@@ -61,3 +52,44 @@ text = "Press the right arrow key to start.
 Your goal is to match the board to the target, bit by bit!"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Board" type="HBoxContainer" parent="." unique_id=384713983]
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+script = ExtResource("4_tefeu")
+metadata/_custom_type_script = "uid://b1pogk4np0yyt"
+
+[node name="MenuLayer" type="CanvasLayer" parent="." unique_id=2131860311]
+
+[node name="ColorRect" type="ColorRect" parent="MenuLayer" unique_id=1209383689]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.5882353)
+
+[node name="CenterContainer" type="CenterContainer" parent="MenuLayer" unique_id=1081212639]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MenuLayer/CenterContainer" unique_id=895502093]
+layout_mode = 2
+
+[node name="BtnContinuar" type="Button" parent="MenuLayer/CenterContainer/VBoxContainer" unique_id=390099237]
+layout_mode = 2
+text = "Continuar"
+
+[node name="BtnSair" type="Button" parent="MenuLayer/CenterContainer/VBoxContainer" unique_id=1718511655]
+layout_mode = 2
+text = "Sair do Jogo
+"

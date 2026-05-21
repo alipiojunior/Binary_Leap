@@ -7,7 +7,27 @@ extends Node
 @onready var win_sound = $WinSound
 @onready var move_sound = $MoveSound
 
+# Variáveis que vão aparecer no Inspector para você linkar os nós do Menu
+@export var menu_layer: CanvasLayer
+@export var btn_continuar: Button
+@export var btn_sair: Button
+
+# Variável para o pop-up da tecla R
+var reset_dialog: ConfirmationDialog
+
 func _ready():
+	_setup_reset_dialog()
+	
+	# Esconde o menu no início do jogo, se ele estiver linkado
+	if menu_layer:
+		menu_layer.hide()
+		
+	# Conecta os botões do menu às funções do código
+	if btn_continuar:
+		btn_continuar.pressed.connect(_on_btn_continuar_pressed)
+	if btn_sair:
+		btn_sair.pressed.connect(_on_btn_sair_pressed)
+	
 	game_board.reset_board()
 	board.init_board(game_board)
 	target_label.text = "Target: " + game_board.target
@@ -16,15 +36,55 @@ func _ready():
 	game_board.update_state.connect(_on_state_updated)
 	game_board.update_index.connect(_on_index_updated)
 
+func _unhandled_input(event):
+	# Detecta a tecla R (Reset) - Só funciona se o menu estiver fechado
+	if event.is_action_pressed("reset_game"):
+		if menu_layer and menu_layer.visible:
+			return # Se o menu tá aberto, ignora o R
+		reset_dialog.popup_centered()
+		
+	# Detecta a tecla ESC (Menu)
+	if event.is_action_pressed("toggle_menu"):
+		_toggle_menu()
+
+func _setup_reset_dialog():
+	reset_dialog = ConfirmationDialog.new()
+	reset_dialog.title = "Aviso"
+	reset_dialog.dialog_text = "Você deseja reiniciar a partida?"
+	reset_dialog.ok_button_text = "SIM"
+	reset_dialog.cancel_button_text = "NÃO"
+	reset_dialog.confirmed.connect(_on_reset_confirmed)
+	add_child(reset_dialog)
+
+func _on_reset_confirmed():
+	game_board.reset_board()
+	board.init_board(game_board)
+	_update_info_label()
+
+# --- FUNÇÕES DO MENU ---
+func _toggle_menu():
+	if menu_layer:
+		# Se tá invisível, fica visível. Se tá visível, fica invisível.
+		menu_layer.visible = !menu_layer.visible
+
+func _on_btn_continuar_pressed():
+	if menu_layer:
+		menu_layer.hide()
+
+func _on_btn_sair_pressed():
+	get_tree().quit()
+# -----------------------
+
 func _on_state_updated(_old_state, new_state: Array):
 	_update_info_label()
-	move_sound.play()
+	if move_sound:
+		move_sound.play()
 
 func _on_index_updated(_old_index: int, _new_index: int):
 	_update_info_label()
 
 func _on_board_solved():
-	if not win_sound.playing:
+	if win_sound and not win_sound.playing:
 		win_sound.play()
 
 func _update_info_label():
