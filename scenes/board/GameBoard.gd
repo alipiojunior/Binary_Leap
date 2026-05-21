@@ -8,42 +8,31 @@ signal game_started()
 
 enum CellType { STANDARD, FLIP_EVERY_N, BLOCKER, EXPLODING }
 
-## Full board definition containing starting bits and special rules.
-## Examples: "1010", "1(0,2)(1,2)0", "1{0,1}1", "0<1,3>1"
 @export var board_definition: String = "1010"
-
-## Target pattern to reach (plain "0"/"1" string).
 @export var target: String = "0000"
-
-## Starting cursor index (-1 means "off the board", first move goes to index 0).
 @export var starting_index: int = -1
 
 var board_size: int
 var target_state: Array[bool] = []
-var current_state: Array[bool] = []   # live bit values (aliased)
+var current_state: Array[bool] = []
 var current_index: int = -1
 var current_display: String = ""
 
-# Per-cell metadata
-var cell_types: Array[int] = []       # CellType values
-var cell_params: Array[int] = []      # N for special cells, 0 for standard
-var cell_counters: Array[int] = []    # visit counter for flip-every-N, blocker, exploding
+var cell_types: Array[int] = []
+var cell_params: Array[int] = []
+var cell_counters: Array[int] = []
 
-# Explosion chain guard - prevents infinite recursion
 var _in_explosion_chain: Array[bool] = []
-
 
 func _ready() -> void:
 	reset_board()
 	InputManager.move_requested.connect(_on_move_requested)
-
 
 func reset_board() -> void:
 	_parse_board_definition(board_definition)
 	target_state = binstr_to_arr(target)
 	current_index = starting_index
 	current_display = arr_to_binstr(current_state)
-
 
 func _on_move_requested(direction: int) -> void:
 	var moved := false
@@ -63,24 +52,18 @@ func _on_move_requested(direction: int) -> void:
 
 	_check_solve()
 
-
-## Attempt to move the cursor one step right.
 func move_right() -> bool:
 	var new_index := 0 if current_index == -1 else current_index + 1
 	if new_index >= board_size:
 		return false
 	return _attempt_move(new_index)
 
-
-## Attempt to move the cursor one step left.
 func move_left() -> bool:
 	if current_index <= 0:
 		return false
 	var new_index := current_index - 1
 	return _attempt_move(new_index)
 
-
-## Common logic for a valid move onto a cell.
 func _attempt_move(new_index: int) -> bool:
 	if cell_types[new_index] == CellType.BLOCKER and cell_counters[new_index] >= cell_params[new_index]:
 		return false
@@ -91,7 +74,6 @@ func _attempt_move(new_index: int) -> bool:
 	_apply_visit(new_index)
 	current_index = new_index
 	return true
-
 
 func _apply_visit(index: int) -> void:
 	if _in_explosion_chain[index]:
@@ -123,15 +105,9 @@ func _apply_visit(index: int) -> void:
 					_apply_visit(index + 1)
 				_in_explosion_chain[index] = false
 
-
 func _check_solve() -> void:
 	if current_state == target_state:
 		solved.emit()
-
-
-# ------------------------------------------------------------------ #
-#  Parsing                                                           #
-# ------------------------------------------------------------------ #
 
 func _parse_board_definition(def: String) -> void:
 	cell_types.clear()
@@ -214,13 +190,11 @@ func _parse_board_definition(def: String) -> void:
 	_in_explosion_chain.resize(board_size)
 	_in_explosion_chain.fill(false)
 
-
 func _parse_digit(s: String, idx: int) -> int:
 	if idx >= s.length() or s[idx] not in ['0', '1']:
 		push_error("Expected '0' or '1' at position %d" % idx)
 		return 0
 	return 1 if s[idx] == '1' else 0
-
 
 func _parse_integer(s: String, idx: int) -> int:
 	var start := idx
@@ -231,16 +205,10 @@ func _parse_integer(s: String, idx: int) -> int:
 		return 1
 	return int(s.substr(start, idx - start))
 
-
 func _skip_digits(s: String, idx: int) -> int:
 	while idx < s.length() and s[idx].is_valid_int():
 		idx += 1
 	return idx
-
-
-# ------------------------------------------------------------------ #
-#  Utility converters                                                #
-# ------------------------------------------------------------------ #
 
 func binstr_to_arr(bin_str: String) -> Array[bool]:
 	var bits: Array[bool] = []
@@ -254,7 +222,6 @@ func binstr_to_arr(bin_str: String) -> Array[bool]:
 		else:
 			push_error("Invalid binary character: ", ch)
 	return bits
-
 
 func arr_to_binstr(bits: Array[bool]) -> String:
 	var result := ""
