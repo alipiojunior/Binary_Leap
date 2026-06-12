@@ -24,6 +24,7 @@ var cell_types: Array[int] = []
 var cell_counters: Array[int] = []
 
 var _history: Array = []
+var is_solved = false
 
 func _ready() -> void:
 	reset_board()
@@ -107,7 +108,8 @@ func _apply_visit(index: int) -> void:
 				current_state[index] = not current_state[index]
 
 func _check_solve() -> void:
-	if current_state == target_state:
+	if current_state == target_state and not is_solved:
+		is_solved = true
 		solved.emit()
 
 func _parse_board_definition(def: String) -> void:
