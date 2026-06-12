@@ -35,6 +35,7 @@ func reset_board() -> void:
 	current_index = starting_index
 	current_display = arr_to_binstr(current_state)
 	move_count = 0
+	is_solved = false
 	_history.clear()
 
 func _process(_delta: float) -> void:
