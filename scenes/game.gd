@@ -10,18 +10,26 @@ extends Node
 var _latest_state_str: String = ""
 var _latest_index: int = -1
 
-func _ready():
+func _ready() -> void:
 	current_label.bbcode_enabled = true
 	target_label.bbcode_enabled = true
 	move_label.bbcode_enabled = true
-	game_board.reset_board()
-	target_label.bbcode_text = "[center]" + game_board.target + "[/center]"
+	
 	game_board.update_state.connect(_on_state_updated)
 	game_board.update_index.connect(_on_index_updated)
 	game_board.move_count_changed.connect(_on_move_count_changed)
 	game_board.solved.connect(_on_board_solved)
+	
+	var pack := LevelManager.load_pack("res://assets/levels/tutorial.lvl")
+	if pack and not pack.get_level_names().is_empty():
+		load_level(pack.pack_name, pack.get_level_names()[0])
+		return
+	
+	# Fallback: use whatever @export values are set in the editor.
+	game_board.reset_board()
 	_latest_state_str = game_board.current_display
-	_latest_index = game_board.current_index
+	_latest_index     = game_board.current_index
+	target_label.bbcode_text = "[center]" + game_board.target + "[/center]"
 	_update_display()
 	_update_move_label()
 
@@ -40,6 +48,27 @@ func _on_move_count_changed(_count: int) -> void:
 func _on_board_solved() -> void:
 	if not win_sound.playing:
 		win_sound.play()
+
+func load_level(pack_name: String, level_name: String) -> void:
+	var spec: LevelSpec = LevelManager.get_level(pack_name, level_name)
+	if spec == null:
+		push_error("Game: level not found - %s / %s" % [pack_name, level_name])
+		return
+ 
+	game_board.board_definition = spec.definition
+	game_board.target = spec.target
+	game_board.starting_index = spec.start_index
+	game_board.move_budget = spec.budget
+ 
+	game_board.reset_board()
+	_sync_display()
+ 
+func _sync_display() -> void:
+	target_label.bbcode_text = "[center]" + game_board.target + "[/center]"
+	_latest_state_str = game_board.current_display
+	_latest_index     = game_board.current_index
+	_update_display()
+	_update_move_label()
 
 func _update_move_label() -> void:
 	var count: int = game_board.move_count
