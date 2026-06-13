@@ -1,5 +1,7 @@
 extends Node
 
+signal level_cleared(record: ClearRecord)
+
 @onready var game_board = $GameBoard
 @onready var target_label = $Target
 @onready var current_label = $Board
@@ -9,6 +11,9 @@ extends Node
 
 var _latest_state_str: String = ""
 var _latest_index: int = -1
+
+var _current_level_name: String = ""
+var _level_start_time: float = 0.0
 
 func _ready() -> void:
 	current_label.bbcode_enabled = true
@@ -28,7 +33,7 @@ func _ready() -> void:
 	# Fallback: use whatever @export values are set in the editor.
 	game_board.reset_board()
 	_latest_state_str = game_board.current_display
-	_latest_index     = game_board.current_index
+	_latest_index = game_board.current_index
 	target_label.bbcode_text = "[center]" + game_board.target + "[/center]"
 	_update_display()
 	_update_move_label()
@@ -46,6 +51,18 @@ func _on_move_count_changed(_count: int) -> void:
 	_update_move_label()
 
 func _on_board_solved() -> void:
+	var record := ClearRecord.new()
+	record.level_name = _current_level_name
+	record.move_count = game_board.move_count
+	record.move_budget = game_board.move_budget
+	record.clear_time = (Time.get_ticks_msec() / 1000.0) - _level_start_time
+	LevelManager.submit_clear(record)
+	level_cleared.emit(record)
+	
+	for r in LevelManager.get_records_for(_current_level_name):
+		print("clear - level: %s  moves: %d/%d  time: %.2fs  name: '%s'" \
+		% [r.level_name, r.move_count, r.move_budget, r.clear_time, r.player_name])
+	
 	if not win_sound.playing:
 		win_sound.play()
 
@@ -61,12 +78,14 @@ func load_level(pack_name: String, level_name: String) -> void:
 	game_board.move_budget = spec.budget
  
 	game_board.reset_board()
+	_current_level_name = level_name
+	_level_start_time = Time.get_ticks_msec() / 1000.0
 	_sync_display()
  
 func _sync_display() -> void:
 	target_label.bbcode_text = "[center]" + game_board.target + "[/center]"
 	_latest_state_str = game_board.current_display
-	_latest_index     = game_board.current_index
+	_latest_index = game_board.current_index
 	_update_display()
 	_update_move_label()
 

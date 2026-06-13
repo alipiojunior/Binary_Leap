@@ -1,7 +1,10 @@
 extends Node
 
+const CLEARS_PATH := "user://clears.tres"
+
 # pack_name (String) -> LevelPack
 var _packs: Dictionary = {}
+var clear_data: ClearData = ClearData.new()
 
 func _ready() -> void:
 	# Register before any .lvl file is loaded.
@@ -39,3 +42,19 @@ func get_level_names(pack_name: String) -> Array:
 func has_level(pack_name: String, level_name: String) -> bool:
 	var pack := _packs.get(pack_name, null) as LevelPack
 	return pack != null and pack.has_level(level_name)
+
+func submit_clear(record: ClearRecord) -> void:
+	clear_data.records.append(record)
+	_save_clears()
+
+func get_records_for(level_name: String) -> Array[ClearRecord]:
+	return clear_data.get_records_for(level_name)
+
+func _load_clears() -> void:
+	if ResourceLoader.exists(CLEARS_PATH):
+		clear_data = ResourceLoader.load(CLEARS_PATH) as ClearData
+	if clear_data == null:
+		clear_data = ClearData.new()
+
+func _save_clears() -> void:
+	ResourceSaver.save(clear_data, CLEARS_PATH)

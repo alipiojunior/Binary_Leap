@@ -55,7 +55,6 @@ func _process(_delta: float) -> void:
 		update_state.emit(old_state, current_state.duplicate())
 		update_index.emit(old_index, current_index)
 		current_display = arr_to_binstr(current_state)
-		print(current_display)
 
 	_check_solve()
 
