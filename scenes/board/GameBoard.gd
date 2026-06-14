@@ -11,7 +11,7 @@ enum CellType { STANDARD, DELAYED }
 @export var board_definition: String = "1010"
 @export var target: String = "0000"
 @export var starting_index: int = -1
-@export var move_budget: int = 0  # 0 means unlimited
+@export var move_budget: int = 0
 
 var board_size: int
 var target_state: Array[bool] = []
@@ -42,7 +42,7 @@ func _process(_delta: float) -> void:
 	var moved := false
 	var old_state := current_state.duplicate()
 	var old_index := current_index
-
+	
 	if Input.is_action_just_pressed("move_left"):
 		moved = move_left()
 	elif Input.is_action_just_pressed("move_right"):
@@ -50,12 +50,12 @@ func _process(_delta: float) -> void:
 	elif Input.is_action_just_pressed("undo"):
 		undo()
 		return
-
+	
 	if moved:
 		update_state.emit(old_state, current_state.duplicate())
 		update_index.emit(old_index, current_index)
 		current_display = arr_to_binstr(current_state)
-
+	
 	_check_solve()
 
 func move_right() -> bool:
@@ -70,7 +70,7 @@ func move_left() -> bool:
 	return _attempt_move(current_index - 1)
 
 func _attempt_move(new_index: int) -> bool:
-	_history.append({           # new — snapshot before applying the move
+	_history.append({
 		"state": current_state.duplicate(),
 		"index": current_index,
 		"counters": cell_counters.duplicate(),
@@ -78,11 +78,10 @@ func _attempt_move(new_index: int) -> bool:
 	})
 	_apply_visit(new_index)
 	current_index = new_index
-	move_count += 1                      # new
-	move_count_changed.emit(move_count)  # new
+	move_count += 1
+	move_count_changed.emit(move_count)
 	return true
 
-# new
 func undo() -> void:
 	if _history.is_empty():
 		return
@@ -120,17 +119,17 @@ func _parse_board_definition(def: String) -> void:
 	var i := 0
 	while i < def.length():
 		var ch := def[i]
-
+		
 		if ch == ' ' or ch == '\t' or ch == '\n':
 			i += 1
 			continue
-
+		
 		if ch == '0' or ch == '1':
 			current_state.append(ch == '1')
 			cell_types.append(CellType.STANDARD)
 			cell_counters.append(0)
 			i += 1
-
+		
 		elif ch == '(':
 			i += 1
 			var val := _parse_digit(def, i); i += 1
@@ -141,7 +140,7 @@ func _parse_board_definition(def: String) -> void:
 			current_state.append(val == 1)
 			cell_types.append(CellType.DELAYED)
 			cell_counters.append(0)
-
+		
 		else:
 			push_error("Invalid character in board definition: " + ch)
 			i += 1
