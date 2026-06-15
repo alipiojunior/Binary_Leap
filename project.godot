@@ -15,9 +15,17 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="Binary Leap"
+<<<<<<< HEAD
 run/main_scene="uid://dfri5kfdnr8dg"
+=======
+run/main_scene="uid://csb6eaxlcakym"
+>>>>>>> a7555e2017683e4109f18d735bc99e865df5f2dc
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+LevelManager="*uid://b4ngo4vmpkjq7"
 
 [input]
 

@@ -1,17 +1,17 @@
 [gd_scene format=3 uid="uid://csb6eaxlcakym"]
 
-[ext_resource type="Script" uid="uid://crnrsi0ouyvjb" path="res://scenes/main.gd" id="1_5qytu"]
-[ext_resource type="Script" uid="uid://dylilh6rq281g" path="res://scenes/board/GameBoard.gd" id="2_tbgi4"]
-[ext_resource type="SystemFont" uid="uid://ds0soky45743i" path="res://assets/mono.tres" id="3_0ng5p"]
-[ext_resource type="AudioStream" uid="uid://ilpo2iutpbvj" path="res://assets/Confirm.wav" id="3_4yvd3"]
-[ext_resource type="AudioStream" uid="uid://cgosm11popu8p" path="res://assets/Click.wav" id="4_6eix4"]
+[ext_resource type="Script" uid="uid://crnrsi0ouyvjb" path="res://scenes/game.gd" id="1_iywne"]
+[ext_resource type="Script" uid="uid://dylilh6rq281g" path="res://scenes/board/GameBoard.gd" id="2_p57ef"]
+[ext_resource type="SystemFont" uid="uid://ds0soky45743i" path="res://assets/mono.tres" id="3_u5sy4"]
+[ext_resource type="AudioStream" uid="uid://ilpo2iutpbvj" path="res://assets/Confirm.wav" id="4_gee14"]
+[ext_resource type="AudioStream" uid="uid://cgosm11popu8p" path="res://assets/Click.wav" id="5_0tnpc"]
 
-[node name="Main" type="Node" unique_id=212816075]
-script = ExtResource("1_5qytu")
+[node name="Game" type="Node" unique_id=212816075]
+script = ExtResource("1_iywne")
 metadata/_edit_horizontal_guides_ = [80.0]
 
 [node name="GameBoard" type="Node" parent="." unique_id=747904054]
-script = ExtResource("2_tbgi4")
+script = ExtResource("2_p57ef")
 board_definition = "10(1)0"
 move_budget = 4
 metadata/_custom_type_script = "uid://dylilh6rq281g"
@@ -19,7 +19,7 @@ metadata/_custom_type_script = "uid://dylilh6rq281g"
 [node name="Target" type="RichTextLabel" parent="." unique_id=1582712405]
 offset_right = 1152.0
 offset_bottom = 72.0
-theme_override_fonts/normal_font = ExtResource("3_0ng5p")
+theme_override_fonts/normal_font = ExtResource("3_u5sy4")
 theme_override_font_sizes/normal_font_size = 60
 bbcode_enabled = true
 text = "0000"
@@ -39,22 +39,22 @@ bbcode_enabled = true
 offset_top = 272.0
 offset_right = 1152.0
 offset_bottom = 360.0
-theme_override_fonts/normal_font = ExtResource("3_0ng5p")
+theme_override_fonts/normal_font = ExtResource("3_u5sy4")
 theme_override_font_sizes/normal_font_size = 84
 bbcode_enabled = true
 text = "00000000"
 
 [node name="WinSound" type="AudioStreamPlayer" parent="." unique_id=1289401778]
-stream = ExtResource("3_4yvd3")
+stream = ExtResource("4_gee14")
 
 [node name="MoveSound" type="AudioStreamPlayer" parent="." unique_id=1591171252]
-stream = ExtResource("4_6eix4")
+stream = ExtResource("5_0tnpc")
 
 [node name="Label" type="Label" parent="." unique_id=699833059]
 offset_top = 568.0
 offset_right = 1152.0
 offset_bottom = 640.0
-theme_override_fonts/font = ExtResource("3_0ng5p")
+theme_override_fonts/font = ExtResource("3_u5sy4")
 theme_override_font_sizes/font_size = 20
 text = "Press the right arrow key to start. 
 Your goal is to match the board to the target, bit by bit!"
