@@ -21,7 +21,7 @@ func _on_credits_button_pressed():
 	show_panel(credits_panel)
 
 func _on_yes_button_pressed():
-	get_tree().change_scene_to_file("res://scenes/main.tscn")
+	get_tree().change_scene_to_file("res://scenes/game.tscn")
 
 func _on_not_yet_button_pressed():
 	show_panel(main_panel)
