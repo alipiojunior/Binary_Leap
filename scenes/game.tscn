@@ -50,7 +50,7 @@ stream = ExtResource("4_gee14")
 [node name="MoveSound" type="AudioStreamPlayer" parent="." unique_id=1591171252]
 stream = ExtResource("5_0tnpc")
 
-[node name="Label" type="Label" parent="." unique_id=699833059]
+[node name="Instructions" type="Label" parent="." unique_id=699833059]
 offset_top = 568.0
 offset_right = 1152.0
 offset_bottom = 640.0

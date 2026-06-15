@@ -1,4 +1,11 @@
 Tutorial {
+    Tutorial {
+        Def:      000
+        Target:   111
+        StartIdx: 1
+        Budget:   3
+    }
+
     Level_1 {
         Def:      (0)(0)(0)
         Target:   111

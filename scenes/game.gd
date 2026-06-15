@@ -8,12 +8,44 @@ signal level_cleared(record: ClearRecord)
 @onready var move_label = $MoveCounter
 @onready var win_sound = $WinSound
 @onready var move_sound = $MoveSound
+@onready var instructions: Label = $Instructions
 
 var _latest_state_str: String = ""
 var _latest_index: int = -1
 
+var _level_queue: Array = []
+var _current_pack: String = ""
 var _current_level_name: String = ""
 var _level_start_time: float = 0.0
+
+func queue_pack(pack_name: String) -> void:
+	_current_pack = pack_name
+	_level_queue = LevelManager.get_level_names(pack_name)
+
+func next_level() -> bool:
+	if _level_queue.is_empty():
+		return false
+	load_level(_current_pack, _level_queue.pop_front())
+	return true
+
+func load_level(pack_name: String, level_name: String) -> void:
+	var spec: LevelSpec = LevelManager.get_level(pack_name, level_name)
+	if spec == null:
+		push_error("Game: level not found - %s / %s" % [pack_name, level_name])
+		return
+ 	
+	game_board.board_definition = spec.definition
+	game_board.target = spec.target
+	game_board.starting_index = spec.start_index
+	game_board.move_budget = spec.budget
+ 	
+	if level_name != "Tutorial":
+		instructions.visible = false
+	
+	game_board.reset_board()
+	_current_level_name = level_name
+	_level_start_time = Time.get_ticks_msec() / 1000.0
+	_sync_display()
 
 func _ready() -> void:
 	current_label.bbcode_enabled = true
@@ -26,8 +58,9 @@ func _ready() -> void:
 	game_board.solved.connect(_on_board_solved)
 	
 	var pack := LevelManager.load_pack("res://assets/levels/tutorial.lvl")
-	if pack and not pack.get_level_names().is_empty():
-		load_level(pack.pack_name, pack.get_level_names()[0])
+	if pack:
+		queue_pack(pack.pack_name)
+		next_level()
 		return
 	
 	# Fallback: use whatever @export values are set in the editor.
@@ -65,23 +98,10 @@ func _on_board_solved() -> void:
 	
 	if not win_sound.playing:
 		win_sound.play()
+	
+	if not next_level():
+		pass # TODO: update this to move between screens.
 
-func load_level(pack_name: String, level_name: String) -> void:
-	var spec: LevelSpec = LevelManager.get_level(pack_name, level_name)
-	if spec == null:
-		push_error("Game: level not found - %s / %s" % [pack_name, level_name])
-		return
- 
-	game_board.board_definition = spec.definition
-	game_board.target = spec.target
-	game_board.starting_index = spec.start_index
-	game_board.move_budget = spec.budget
- 
-	game_board.reset_board()
-	_current_level_name = level_name
-	_level_start_time = Time.get_ticks_msec() / 1000.0
-	_sync_display()
- 
 func _sync_display() -> void:
 	target_label.bbcode_text = "[center]" + game_board.target + "[/center]"
 	_latest_state_str = game_board.current_display
@@ -100,14 +120,14 @@ func _update_display() -> void:
 	for i in range(_latest_state_str.length()):
 		var bit_char = _latest_state_str[i]
 		var cell_type = game_board.cell_types[i]
-
+	
 		if cell_type == GameBoard.CellType.DELAYED:
 			var struck = game_board.cell_counters[i] % 2 == 0
 			if struck:
 				bit_char = "[s]" + bit_char + "[/s]"
 		if i == _latest_index:
 			bit_char = "[u]" + bit_char + "[/u]"
-
+	
 		rich_text += bit_char
-
+	
 	current_label.bbcode_text = "[center]" + rich_text + "[/center]"
