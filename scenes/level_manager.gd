@@ -10,6 +10,7 @@ func _ready() -> void:
 	# Register before any .lvl file is loaded.
 	# Use load() for .lvl files - NEVER PRELOAD!
 	ResourceLoader.add_resource_format_loader(LvlLoader.new(), true)
+	load_clears()
 
 func load_pack(path: String) -> LevelPack:
 	var res = load(path)
@@ -53,6 +54,10 @@ func get_records_for(level_name: String) -> Array[ClearRecord]:
 func load_clears() -> void:
 	if ResourceLoader.exists(CLEARS_PATH):
 		clear_data = ResourceLoader.load(CLEARS_PATH) as ClearData
+		print("Loaded clears: %d records" % clear_data.records.size())
+	else:
+		print("No clears file found at: ", ProjectSettings.globalize_path(CLEARS_PATH))
+		clear_data = ClearData.new()
 	if clear_data == null:
 		clear_data = ClearData.new()
 

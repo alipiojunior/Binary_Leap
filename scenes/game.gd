@@ -87,8 +87,6 @@ func _ready() -> void:
 		next_level()
 		return
 	
-	LevelManager.load_clears()
-	
 	# Fallback: use whatever @export values are set in the editor.
 	game_board.reset_board()
 	_latest_state_str = game_board.current_display
