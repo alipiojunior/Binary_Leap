@@ -87,6 +87,8 @@ func _ready() -> void:
 		next_level()
 		return
 	
+	LevelManager.load_clears()
+	
 	# Fallback: use whatever @export values are set in the editor.
 	game_board.reset_board()
 	_latest_state_str = game_board.current_display
@@ -226,7 +228,7 @@ func _apply_pending_name() -> void:
 func _on_back_pressed() -> void:
 	_apply_pending_name()
 	finish_menu.hide()
-	# get_tree().change_scene_to_file("res://scenes/main.tscn")
+	get_tree().change_scene_to_file("res://scenes/menu.tscn")
 
 func _on_retry_pressed() -> void:
 	_apply_pending_name()
@@ -237,4 +239,4 @@ func _on_next_level_pressed() -> void:
 	_apply_pending_name()
 	finish_menu.hide()
 	if not next_level():
-		pass # TODO: update this to move between screens.
+		get_tree().change_scene_to_file("res://scenes/menu.tscn")

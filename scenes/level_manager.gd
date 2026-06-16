@@ -50,7 +50,7 @@ func submit_clear(record: ClearRecord) -> void:
 func get_records_for(level_name: String) -> Array[ClearRecord]:
 	return clear_data.get_records_for(level_name)
 
-func _load_clears() -> void:
+func load_clears() -> void:
 	if ResourceLoader.exists(CLEARS_PATH):
 		clear_data = ResourceLoader.load(CLEARS_PATH) as ClearData
 	if clear_data == null:
