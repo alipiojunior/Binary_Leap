@@ -45,7 +45,7 @@ func has_level(pack_name: String, level_name: String) -> bool:
 
 func submit_clear(record: ClearRecord) -> void:
 	clear_data.records.append(record)
-	_save_clears()
+	save_clears()
 
 func get_records_for(level_name: String) -> Array[ClearRecord]:
 	return clear_data.get_records_for(level_name)
@@ -56,5 +56,5 @@ func _load_clears() -> void:
 	if clear_data == null:
 		clear_data = ClearData.new()
 
-func _save_clears() -> void:
+func save_clears() -> void:
 	ResourceSaver.save(clear_data, CLEARS_PATH)

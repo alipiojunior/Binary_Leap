@@ -6,9 +6,72 @@
 [ext_resource type="AudioStream" uid="uid://ilpo2iutpbvj" path="res://assets/Confirm.wav" id="4_gee14"]
 [ext_resource type="AudioStream" uid="uid://cgosm11popu8p" path="res://assets/Click.wav" id="5_0tnpc"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iywne"]
+bg_color = Color(0.75686276, 0.6862745, 0.627451, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.24705882, 0.20784314, 0.18431373, 1)
+shadow_size = 6
+anti_aliasing = false
+
 [node name="Game" type="Node" unique_id=212816075]
 script = ExtResource("1_iywne")
 metadata/_edit_horizontal_guides_ = [80.0]
+
+[node name="FinishMenu" type="Control" parent="." unique_id=1073468142]
+z_index = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="FinishMenu" unique_id=1213593318]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="FinishMenu/MarginContainer" unique_id=1830478893]
+custom_minimum_size = Vector2(600, 400)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_iywne")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="FinishMenu/MarginContainer/Panel" unique_id=582009918]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="FinishMenu/MarginContainer/Panel/VBoxContainer" unique_id=190003800]
+layout_mode = 2
+size_flags_vertical = 2
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_bottom = -16
+
+[node name="Title" type="RichTextLabel" parent="FinishMenu/MarginContainer/Panel/VBoxContainer/MarginContainer" unique_id=312534349]
+layout_mode = 2
+size_flags_vertical = 2
+theme_override_fonts/normal_font = ExtResource("3_u5sy4")
+theme_override_font_sizes/normal_font_size = 48
+bbcode_enabled = true
+text = "[center]Clear[/center]"
+fit_content = true
+scroll_active = false
 
 [node name="GameBoard" type="Node" parent="." unique_id=747904054]
 script = ExtResource("2_p57ef")
@@ -17,6 +80,7 @@ move_budget = 4
 metadata/_custom_type_script = "uid://dylilh6rq281g"
 
 [node name="Target" type="RichTextLabel" parent="." unique_id=1582712405]
+texture_filter = 1
 offset_right = 1152.0
 offset_bottom = 72.0
 theme_override_fonts/normal_font = ExtResource("3_u5sy4")
@@ -25,6 +89,7 @@ bbcode_enabled = true
 text = "0000"
 
 [node name="MoveCounter" type="RichTextLabel" parent="." unique_id=2026614096]
+texture_filter = 1
 offset_top = 56.0
 offset_right = 1152.0
 offset_bottom = 136.0
@@ -36,9 +101,10 @@ theme_override_font_sizes/mono_font_size = 20
 bbcode_enabled = true
 
 [node name="Board" type="RichTextLabel" parent="." unique_id=619643644]
+texture_filter = 1
 offset_top = 272.0
 offset_right = 1152.0
-offset_bottom = 360.0
+offset_bottom = 368.0
 theme_override_fonts/normal_font = ExtResource("3_u5sy4")
 theme_override_font_sizes/normal_font_size = 84
 bbcode_enabled = true
