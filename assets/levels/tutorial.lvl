@@ -2,8 +2,22 @@ Tutorial {
     Tutorial {
         Def:      000
         Target:   111
+        StartIdx: 0
+        Budget:   0
+    }
+
+    Tutorial_2 {
+        Def:      11010000
+        Target:   01101010
+        StartIdx: 3
+        Budget:   15
+    }
+
+    Level_0 {
+        Def:      00(0)
+        Target:   111
         StartIdx: 1
-        Budget:   3
+        Budget:   6
     }
 
     Level_1 {
@@ -11,5 +25,33 @@ Tutorial {
         Target:   111
         StartIdx: 1
         Budget:   7
+    }
+
+    Level_2 {
+        Def:      (0)(0)(0)
+        Target:   111
+        StartIdx: 0
+        Budget:   11
+    }
+
+    Level_X {
+        Def:      10(1)0(1)0(1)01
+        Target:   010101010
+        StartIdx: 4
+        Budget:   19
+    }
+
+    Level_X2 {
+        Def:      110(1)(0)000
+        Target:   01101010
+        StartIdx: 5
+        Budget:   13
+    }
+
+    Level_X3 {
+        Def:      10(1)1(0)(1)11
+        Target:   11110000
+        StartIdx: 3
+        Budget:   18
     }
 }
