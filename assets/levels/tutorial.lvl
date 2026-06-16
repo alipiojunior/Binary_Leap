@@ -54,4 +54,12 @@ Tutorial {
         StartIdx: 3
         Budget:   18
     }
+
+    Level_XX {
+        Def:      1011(0)0(1)11(1)(0)(1)00(1)1
+        Target:   0010000011110001
+        StartIdx: 8
+        Budget:   0
+    }
+
 }
